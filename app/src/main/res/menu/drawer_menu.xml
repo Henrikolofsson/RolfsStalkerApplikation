@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_start"
+            android:icon="@drawable/ic_groups"
+            android:title="@string/översikt"/>
+        <item
+            android:id="@+id/nav_registerUser"
+            android:icon="@drawable/ic_registergroup"
+            android:title="@string/registerGroups"/>
+    </group>
+</menu>
