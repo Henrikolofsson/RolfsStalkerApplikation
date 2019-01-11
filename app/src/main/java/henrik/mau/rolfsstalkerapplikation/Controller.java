@@ -3,6 +3,7 @@ package henrik.mau.rolfsstalkerapplikation;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -11,10 +12,15 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.Socket;
+import java.util.ArrayList;
+import java.util.Timer;
+import java.util.TimerTask;
 
+import Entities.Group;
 import Fragment.StartFragment;
 import Fragment.DataFragment;
 import Fragment.MainFragment;
+import Interfaces.RolfsServerListener;
 
 public class Controller {
     private MainActivity activity;
@@ -31,6 +37,12 @@ public class Controller {
     private DataInputStream dis;
 
     private String username;
+    private boolean registered = false;
+    private String registeredGroup;
+
+    private ArrayList<RolfsServerListener> serverListeners = new ArrayList<>();
+    private JSONArray jsonArray;
+    private ArrayList<String> groups = new ArrayList<>();
 
     /*
        The constructor of the controller. It first creates all the fragments.
@@ -42,6 +54,34 @@ public class Controller {
         initializeFragments();
         setFragment("StartFragment");
         connect();
+        initServerListeners();
+        //TESTTRÅD
+        initRegisterThread();
+    }
+
+    private void initRegisterThread(){
+        TimerTask timerTask = new TimerTask() {
+            @Override
+            public void run() {
+                if (connectedSocket != null) {
+                    try {
+                        JSONObject json = new JSONObject();
+                        json.put("type", "register");
+                        json.put("group", "test");
+                        json.put("member", "testsson");
+                        String jsonObject = json.toString();
+                        dos.writeUTF(jsonObject);
+                        dos.flush();
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        };
+        Timer timer = new Timer();
+        timer.schedule(timerTask,5000, 10000);
     }
 
     /*
@@ -117,6 +157,15 @@ public class Controller {
         return username;
     }
 
+    private void initServerListeners(){
+        serverListeners.add(mainFragment);
+    }
+
+    /*
+       Method that establish a connection with Rolf:s server and
+       instantiate a thread which listens on the input.
+     */
+
     public void connect(){
         final InputListener inputListener = new InputListener();
         final Thread inputListenerThread = new Thread(inputListener);
@@ -131,6 +180,7 @@ public class Controller {
 
                     if (connectedSocket != null) {
                         inputListenerThread.start();
+                        startGroupListener();
                     }
                 } catch(IOException e){
                     e.printStackTrace();
@@ -139,9 +189,78 @@ public class Controller {
         }).start();
     }
 
-    public void checkInput(JSONObject incomingObject){
+    private void checkInput(JSONObject incomingObject){
         Log.d("INCOMINGOBJECT:", incomingObject.toString());
+        try {
+            if (incomingObject.getString("type").equals("register")) {
+                registered = true;
+            }
+
+            else if(incomingObject.getString("type").equals("unregister")){
+                registered = false;
+            }
+
+            else if(incomingObject.getString("type").equals("groups")){
+                jsonArray = incomingObject.getJSONArray("groups");
+                groups.clear();
+
+                for(int i = 0; i < jsonArray.length(); i++){
+                    JSONObject individualGroup = jsonArray.getJSONObject(i);
+                    groups.add(individualGroup.getString("group"));
+                }
+
+                for(RolfsServerListener listener : serverListeners){
+                    listener.groupRequest(groups);
+                }
+
+
+            }
+
+            else if(incomingObject.getString("type").equals("members")){
+
+            }
+
+            else if(incomingObject.getString("type").equals("locations")){
+
+            }
+
+            else if(incomingObject.getString("type").equals("exception")){
+
+            }
+
+        } catch(JSONException e){
+            e.printStackTrace();
+        }
     }
+
+   private void startGroupListener(){
+        TimerTask timerTask = new TimerTask() {
+            @Override
+            public void run() {
+                getAvailableGroups();
+            }
+        };
+        Timer timer = new Timer();
+        timer.schedule(timerTask, 0, 5000);
+   }
+
+   public void getAvailableGroups(){
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    JSONObject json = new JSONObject();
+                    json.put("type", "groups");
+                    dos.writeUTF(json.toString());
+                    dos.flush();
+                } catch(JSONException e){
+                    e.printStackTrace();
+                } catch(IOException e){
+                    e.printStackTrace();
+                }
+            }
+        });
+   }
 
     private class InputListener implements Runnable {
         boolean running = true;
