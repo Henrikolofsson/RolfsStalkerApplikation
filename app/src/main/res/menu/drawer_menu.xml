@@ -7,8 +7,16 @@
             android:icon="@drawable/ic_groups"
             android:title="@string/översikt"/>
         <item
-            android:id="@+id/nav_registerUser"
+            android:id="@+id/nav_register_group"
             android:icon="@drawable/ic_registergroup"
             android:title="@string/registerGroups"/>
+        <item
+            android:id="@+id/nav_unregister_group"
+            android:icon="@drawable/ic_person"
+            android:title="Avregistrera från grupp"/>
+        <item
+            android:id="@+id/nav_map"
+            android:icon="@drawable/ic_add_location_black_24dp"
+            android:title="Karta"/>
     </group>
 </menu>

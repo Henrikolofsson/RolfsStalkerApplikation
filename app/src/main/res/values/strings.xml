@@ -2,11 +2,16 @@
     <string name="app_name">RolfsStalkerApplikation</string>
     <string name="översikt">Översikt</string>
     <string name="registerGroups">Registrera Grupp</string>
+    <string name="unregisterGroups">Avregistrera grupp</string>
     <string name="UserName">Användarnamn</string>
+    <string name="GroupName">Gruppnamn</string>
     <string name="LogIn">Logga in</string>
     <string name="Welcome">Välkommen</string>
     <string name="stalker">, till Rolfs stalkerapplikation</string>
+    <string name="register">Registrera grupp</string>
+    <string name="unregisterfrom">Avregistrera från grupp: </string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title_activity_maps">Map</string>
 </resources>

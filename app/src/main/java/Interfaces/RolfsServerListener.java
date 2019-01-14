@@ -11,6 +11,6 @@ public interface RolfsServerListener {
 
     void groupRequest(ArrayList<String> groups);
 
-    ArrayList<Member> onPositionsMessage();
+    void onPositionsMessage(ArrayList<Member> members);
 
 }

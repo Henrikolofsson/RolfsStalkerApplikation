@@ -3,10 +3,12 @@ package Adapters;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -66,7 +68,12 @@ public class GroupAdapter extends RecyclerView.Adapter<GroupAdapter.Holder>{
 
         @Override
         public void onClick(View v) {
-
+            if(!controller.getRegistered()) {
+                controller.registerGroup(tvGroupName.getText().toString());
+                Toast.makeText(v.getContext(), controller.getUsername() + " registered group: " + tvGroupName.getText().toString(), Toast.LENGTH_SHORT).show();
+                controller.setMainFragment();
+            } else {
+                Toast.makeText(v.getContext(), "You are already in a group.", Toast.LENGTH_SHORT).show();            }
         }
     }
 

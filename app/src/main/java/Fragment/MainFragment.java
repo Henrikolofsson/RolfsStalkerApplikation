@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -67,11 +68,21 @@ public class MainFragment extends Fragment implements RolfsServerListener {
     @Override
     public void groupRequest(ArrayList<String> groups) {
         this.groups = groups;
-        adapter.notifyDataSetChanged();
+
+        if(adapter != null){
+            adapter.notifyDataSetChanged();
+           // adapter.setContent(groups);
+        }
     }
 
     @Override
-    public ArrayList<Member> onPositionsMessage() {
-        return null;
+    public void onPositionsMessage(ArrayList<Member> members) {
+
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        adapter.notifyDataSetChanged();
     }
 }

@@ -17,9 +17,14 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
+import java.util.ArrayList;
+
+import Interfaces.ActivityListener;
+
 public class MainActivity extends AppCompatActivity {
     private Controller controller;
     private FragmentManager fm;
+    private ArrayList<ActivityListener> activityListeners = new ArrayList<>();
 
     private Toolbar toolbar;
     private DrawerLayout drawerLayout;
@@ -44,6 +49,7 @@ public class MainActivity extends AppCompatActivity {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
         }
         controller = new Controller(this);
+        activityListeners.add(controller);
     }
 
     /*
@@ -67,11 +73,33 @@ public class MainActivity extends AppCompatActivity {
                     case R.id.nav_start:
                         menuItem.setChecked(true);
                         drawerLayout.closeDrawers();
+                        for(ActivityListener l : activityListeners){
+                            l.setMainFragment();
+                        }
                         return true;
 
-                    case R.id.nav_registerUser:
+                    case R.id.nav_register_group:
                         menuItem.setChecked(true);
                         drawerLayout.closeDrawers();
+                        for(ActivityListener l : activityListeners){
+                            l.setRegisterGroupFragment();
+                        }
+                        return true;
+
+                    case R.id.nav_unregister_group:
+                        menuItem.setChecked(true);
+                        drawerLayout.closeDrawers();
+                        for(ActivityListener l : activityListeners){
+                            l.setUnregisterFragment();
+                        }
+                        return true;
+
+                    case R.id.nav_map:
+                        menuItem.setChecked(true);
+                        drawerLayout.closeDrawers();
+                        for(ActivityListener l : activityListeners){
+                            l.setMapFragment();
+                        }
                         return true;
                 }
                 return false;
@@ -126,7 +154,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-       // controller.onResume();
+        controller.onResume();
 
     }
 

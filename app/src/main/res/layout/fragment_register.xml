@@ -1,0 +1,29 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@drawable/backgroundregister"
+    tools:context="Fragment.RegisterFragment">
+
+    <!-- TODO: Update blank fragment layout -->
+    <EditText
+        android:id="@+id/etGroupName"
+        android:layout_width="match_parent"
+        android:layout_height="54dp"
+        android:layout_gravity="center"
+        android:layout_marginTop="300dp"
+        android:autofillHints="true"
+        android:ems="10"
+        android:gravity="center"
+        android:hint="@string/GroupName"
+        android:inputType="textPersonName"
+        android:textColorHint="@color/eggWhite" />
+
+    <Button
+        android:id="@+id/btnRegisterGroup"
+        android:layout_width="match_parent"
+        android:layout_height="54dp"
+        android:text="@string/register" />
+
+</LinearLayout>
